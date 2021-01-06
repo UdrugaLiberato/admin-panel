@@ -1,0 +1,168 @@
+@import "variables";
+
+//Buttons
+@each $name,
+$value in $colors {
+  .btn-#{$name} {
+    background-color: #{$value} !important;
+    border: 1px solid #{$value} !important;
+    color: $white !important;
+    box-shadow: 0 3px 5px 0 rgba($value, 0.3);
+
+    &:hover, &:focus, &:active, &.active, &.focus {
+      background-color: darken($value, 10%) !important;
+      border-color: darken($value, 10%) !important;
+      color: $white !important;
+    }
+  }
+
+  .btn-soft-#{$name} {
+    background-color: rgba($value, 0.2) !important;
+    border: 1px solid rgba($value, 0.2) !important;
+    color: #{$value} !important;
+    box-shadow: 0 3px 5px 0 rgba($value, 0.3);
+
+    &:hover, &:focus, &:active, &.active, &.focus {
+      background-color: #{$value} !important;
+      border-color: #{$value} !important;
+      color: $white !important;
+    }
+  }
+
+  .btn-outline-#{$name} {
+    border: 1px solid #{$value};
+    color: #{$value};
+    background-color: transparent;
+
+    &:hover, &:focus, &:active, &.active, &.focus, &:not(:disabled):not(.disabled):active {
+      background-color: #{$value};
+      border-color: #{$value};
+      color: $white !important;
+      box-shadow: 0 3px 5px 0 rgba($value, 0.3);
+    }
+  }
+}
+
+.btn {
+  padding: .5rem 1.25rem;
+  outline: none;
+  text-decoration: none;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s;
+  font-weight: 600;
+  border-radius: .375rem;
+
+  &:focus {
+    box-shadow: none !important;
+  }
+
+  &.btn-sm {
+    padding: .5625rem 1rem;
+    font-size: .625rem;
+  }
+
+  &.btn-lg {
+    padding: .875rem 1.875rem;
+    font-size: 1rem;
+    font-weight: 600;
+
+  }
+
+  &.searchbtn {
+    padding: .375rem 1.25rem;
+  }
+
+  &.btn-pills {
+    border-radius: 1.875rem;
+  }
+
+  &.btn-light {
+    color: $dark !important;
+    border: 1px solid $gray-300 !important;
+
+    &:hover, &:focus, &:active, &.active, &.focus {
+      background-color: darken($light, 10%) !important;
+      color: $dark !important;
+    }
+  }
+
+  &.btn-soft-light {
+    color: rgba($dark, 0.5) !important;
+    border: 1px solid $gray-300 !important;
+
+    &:hover, &:focus, &:active, &.active, &.focus {
+      color: $dark !important;
+    }
+  }
+
+  &.btn-outline-light {
+    border: 1px solid $gray-300 !important;
+    color: $dark !important;
+    background-color: transparent;
+
+    &:hover, &:focus, &:active, &.active, &.focus {
+      background-color: $light !important;
+    }
+  }
+}
+
+button:disabled {
+  border: thin solid $danger !important;
+  color: $danger !important;
+
+  &:hover, &:focus, &:active, &.active, &.focus {
+    border: thin solid $danger !important;
+    color: $danger !important;
+  }
+}
+
+button:not(:disabled) {
+  outline: none;
+}
+
+// Backgrounds
+@each $name,
+$value in $colors {
+  .bg-#{$name} {
+    background-color: #{$value} !important;
+    color: $white !important;
+    box-shadow: 0 3px 5px 0 rgba($value, 0.3);
+  }
+
+  .bg-soft-#{$name} {
+    background-color: rgba($value, 0.2) !important;
+    color: #{$value} !important;
+    box-shadow: 0 3px 5px 0 rgba($value, 0.3);
+  }
+}
+
+// text
+@each $name,
+$value in $colors {
+  .text-#{$name} {
+    color: $value !important;
+  }
+
+  .text {
+    font-weight: map-get($font-weights, "regular");
+
+    &.text-sm {
+      font-size: .875rem;
+    }
+
+    &.text-lg {
+      font-size: 1.5rem;
+    }
+
+    &.text-xl {
+      font-size: 3rem;
+      font-weight: map-get($font-weights, "medium");
+    }
+
+    &.text-xxl {
+      font-size: 4rem;
+      font-weight: map-get($font-weights, "bold0");
+    }
+  }
+}
