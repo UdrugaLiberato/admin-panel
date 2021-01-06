@@ -1,11 +1,13 @@
 import React from "react";
-import './app.scss';
+import { Switch, Route } from "react-router-dom";
+import LoginPage from "./Pages/LoginPage";
 
 const App = () => {
-    return (<div>
-            hi
-        </div>
-    );
-}
+  return (
+    <Switch>
+      <Route path="/" exact component={LoginPage} />
+    </Switch>
+  );
+};
 
 export default App;
