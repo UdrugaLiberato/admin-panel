@@ -3,6 +3,8 @@ import { Route, Switch } from "react-router-dom";
 import LoginPage from "./Pages/LoginPage";
 import DashboardPage from "./Pages/DashboardPage";
 import Navigation from "./Components/Navigation";
+import ListLocations from "./Components/Locations";
+import EditLocation from "./Components/Locations/edit";
 
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -27,6 +29,8 @@ const App = () => {
       <Switch>
         <Route path="/" exact component={LoginPage} />
         <Route path="/dashboard" exact component={DashboardPage} />
+        <Route path="/locations" exact component={ListLocations} />
+        <Route path="/locations/edit/:id" exact component={EditLocation} />
       </Switch>
     </div>
   );

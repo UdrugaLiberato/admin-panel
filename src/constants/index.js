@@ -13,3 +13,7 @@ export const ENDPOINTS = {
   LOGIN: `${api}/login`,
   USER: `${api}/user`,
 };
+
+export const LOCATIONENDPOINTS = {
+  LIST: `${api}/locations`,
+};
