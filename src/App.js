@@ -1,12 +1,34 @@
-import React from "react";
-import { Switch, Route } from "react-router-dom";
+import React, { useState } from "react";
+import { Route, Switch } from "react-router-dom";
 import LoginPage from "./Pages/LoginPage";
+import DashboardPage from "./Pages/DashboardPage";
+import Navigation from "./Components/Navigation";
 
 const App = () => {
+  const [collapsed, setCollapsed] = useState(false);
+  const [toggled, setToggled] = useState(false);
+
+  const handleCollapsedChange = (checked) => {
+    setCollapsed(checked);
+  };
+
+  const handleToggleSidebar = (value) => {
+    setToggled(value);
+  };
+
   return (
-    <Switch>
-      <Route path="/" exact component={LoginPage} />
-    </Switch>
+    <div className={`app ${toggled ? "toggled" : ""}`}>
+      <Navigation
+        collapsed={collapsed}
+        toggled={toggled}
+        handleCollapsedChange={handleCollapsedChange}
+        handleToggleSidebar={handleToggleSidebar}
+      />
+      <Switch>
+        <Route path="/" exact component={LoginPage} />
+        <Route path="/dashboard" exact component={DashboardPage} />
+      </Switch>
+    </div>
   );
 };
 
