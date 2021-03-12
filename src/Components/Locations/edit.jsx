@@ -4,11 +4,13 @@ import { getLocation } from "./getLocation";
 import "./styles.scss";
 import { locationData } from "./locationData";
 import Switch from "react-switch";
+import { getNewFormData } from "./getNewFormData";
 
 const EditLocation = () => {
   const [location, setLocation] = useState(null);
   const [formData, setFormData] = useState({});
   let { id } = useParams();
+  const [newFormData, setNewFormData] = useState(getNewFormData());
 
   useEffect(() => {
     getLocation(id, setLocation);
@@ -19,10 +21,7 @@ const EditLocation = () => {
       locationData(location, setFormData);
     }
   }, [location]);
-  console.log(formData);
-  const handleChange = () => {
-    console.log(1);
-  };
+  const handleChange = () => {};
 
   const renderQuestions = () => {
     if (formData && formData.questions && formData.questions.length > 0) {
@@ -56,9 +55,20 @@ const EditLocation = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    console.log("formSubmitted");
   };
 
+  const handleEditChange = (e, target) => {
+    e.persist();
+    setNewFormData((prevState) => ({
+      ...prevState,
+      data: {
+        ...prevState.data,
+        [target]: e.target.value,
+      },
+    }));
+  };
+
+  console.log(newFormData);
   const renderForm = () => {
     return (
       <form>
@@ -69,6 +79,8 @@ const EditLocation = () => {
             className="form-control"
             id="name"
             placeholder={formData.name}
+            onChange={(e) => handleEditChange(e, "name")}
+            required
           />
         </div>
         <div className="form-group">
@@ -78,6 +90,8 @@ const EditLocation = () => {
             className="form-control"
             id="street"
             placeholder={formData.street}
+            onChange={(e) => handleEditChange(e, "street")}
+            required
           />
         </div>
         <div className="form-group">
@@ -87,6 +101,8 @@ const EditLocation = () => {
             className="form-control"
             id="city"
             placeholder={formData.city}
+            onChange={(e) => handleEditChange(e, "city")}
+            required
           />
         </div>
         <div className="form-group">
@@ -96,6 +112,7 @@ const EditLocation = () => {
             className="form-control"
             id="email"
             placeholder={formData.email}
+            onChange={(e) => handleEditChange(e, "email")}
           />
         </div>
         <div className="form-group">
@@ -105,6 +122,7 @@ const EditLocation = () => {
             className="form-control"
             id="email"
             placeholder={formData.phone}
+            onChange={(e) => handleEditChange(e, "phone")}
           />
         </div>
         <div className="form-group">
@@ -115,6 +133,7 @@ const EditLocation = () => {
             id="lat"
             step="any"
             placeholder={formData.lat}
+            onChange={(e) => handleEditChange(e, "lat")}
           />
         </div>
         <div className="form-group">
@@ -125,17 +144,17 @@ const EditLocation = () => {
             id="lng"
             step="any"
             placeholder={formData.lng}
+            onChange={(e) => handleEditChange(e, "lng")}
           />
         </div>
         <div className="form-group">
           <label htmlFor="exampleFormControlSelect1">Example select</label>
-          <select className="form-control" id="exampleFormControlSelect1">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </select>
+          <Dropdown
+            onSelect={handleDropdownSelect}
+            value={categoryId}
+            isValid={formData.validation[CATEGORY]}
+            heading="Select..."
+          />
         </div>
 
         <div className="form-group">
@@ -145,6 +164,7 @@ const EditLocation = () => {
             id="exampleFormControlTextarea1"
             rows="3"
             placeholder={formData.description}
+            onChange={(e) => handleEditChange(e, "description")}
           />
           1
         </div>
@@ -155,6 +175,6 @@ const EditLocation = () => {
     );
   };
 
-  return location ? renderForm() : "";
+  return <div>{location ? renderForm() : ""}</div>;
 };
 export default EditLocation;
