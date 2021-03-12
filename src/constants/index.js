@@ -1,8 +1,10 @@
+import { getUserAccessToken } from "../context/user";
+
 let api;
 
 api =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:8183/web/v1"
+    ? "https://api.udruga-liberato.hr/web/v1"
     : "https://api.udruga-liberato.hr/web/v1";
 
 export const ENDPOINTS = {
@@ -16,4 +18,14 @@ export const ENDPOINTS = {
 
 export const LOCATIONENDPOINTS = {
   LIST: `${api}/locations`,
+  PUT: `${api}/location/`,
+};
+
+export const CATEGORYENDPOINTS = {
+  LIST: `${api}/categories`,
+};
+
+export const headers = {
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${getUserAccessToken()}`,
 };

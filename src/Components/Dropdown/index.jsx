@@ -1,14 +1,11 @@
-const Dropdown = ({
-  showAll = true,
-  heading,
-  onSelect,
-  value,
-  isValid,
-}) => {
+import { useContext, useState } from "react";
+import { CategoriesContext } from "../../context/categories";
+import "./style.scss";
+
+const Dropdown = ({ showAll = true, heading, onSelect, value }) => {
   const [option, setOption] = useState();
-  const { categories } = getAllCategories()000;
+  const { categories } = useContext(CategoriesContext);
   const [open, setOpen] = useState(false);
-  const dropdownRef = useRef < HTMLDivElement > null;
 
   const valueInWords = !showAll && !value ? "Select..." : option;
 
@@ -24,7 +21,7 @@ const Dropdown = ({
   };
 
   const renderOptions = () => {
-    return categories.map((category1) => {
+    return categories.map((category) => {
       // TODO: language
 
       return (
@@ -40,10 +37,7 @@ const Dropdown = ({
   };
 
   return (
-    <div
-      className={`dropdown-wrapper ${isValid ? "" : "invalid"} flex`}
-      ref={dropdownRef}
-    >
+    <div className={`dropdown-wrapper flex`}>
       <div className="dropdown-heading" onClick={handleClick}>
         <div>{valueInWords || heading}</div>
         <div className="arrow-wrap">

@@ -13,6 +13,14 @@ export const getUserStatus = () => {
   return Cookies.get("_status");
 };
 
+export const getUserId = () => {
+  return id;
+};
+
+export const getUserAccessToken = () => {
+  return accessToken;
+};
+
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(getUserStatus());
 
@@ -21,7 +29,8 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (user.status) return getUserRequest(id, accessToken, setUser);
+    if (getUserStatus() === true.toString())
+      return getUserRequest(id, accessToken, setUser);
   }, []);
   return (
     <UserContext.Provider

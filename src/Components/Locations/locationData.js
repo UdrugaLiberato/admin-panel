@@ -12,6 +12,6 @@ export const locationData = (location, setFormData) => {
     about: location.attributes.description,
     questions: location.attributes.questionsAndAnswers,
     images: location.attributes.images,
-    category: getCategoryName(location.relationships.category.data.id),
+    category: location.relationships.category.data.id,
   });
 };

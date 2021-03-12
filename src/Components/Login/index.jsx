@@ -4,16 +4,16 @@ import "./styles.scss";
 import { initLoginFormData } from "./initLoginFormData";
 import axios from "axios";
 import { ENDPOINTS } from "../../constants";
-import { UserContext } from "../../context/user";
+import { getUserStatus, UserContext } from "../../context/user";
 import { useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const Login = () => {
   const [loginFormData, setLoginFormData] = useState(initLoginFormData);
-  const { setUserInfo, user } = useContext(UserContext);
+  const { setUserInfo } = useContext(UserContext);
   const history = useHistory();
 
-  if (user.status) {
+  if (getUserStatus() === true.toString()) {
     history.push("/dashboard");
   }
 

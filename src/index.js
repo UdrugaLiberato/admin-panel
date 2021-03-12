@@ -5,12 +5,15 @@ import App from "./App";
 import "bootstrap/dist/css/bootstrap.css";
 import "./app.scss";
 import { UserProvider } from "./context/user";
+import { CategoriesProvider } from "./context/categories";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <UserProvider>
-        <App />
+        <CategoriesProvider>
+          <App />
+        </CategoriesProvider>
       </UserProvider>
     </BrowserRouter>
   </React.StrictMode>,

@@ -1,0 +1,87 @@
+@import "../../styles/variables.scss";
+
+.dropdown-wrapper {
+  display: flex;
+  position: relative;
+  align-items: center;
+  height: inherit;
+  height: 3rem;
+  border-radius: 3px;
+  border: 1px solid gray;
+
+  &.invalid {
+    border: 2px solid red;
+  }
+
+  .dropdown-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: darkblue;
+    font-weight: 500;
+    padding-left: 0.9rem;
+    font-size: 0.9375rem;
+    height: inherit;
+    width: inherit;
+    cursor: pointer;
+    user-select: none;
+  }
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 2.9rem;
+  overflow: hidden;
+  color: darkblue;
+  font-size: 0.9rem;
+  z-index: 20;
+  background: #fff;
+  width: 100%;
+  border: 1px solid gray;
+  border-radius: 3px;
+  padding: 0.5rem 0 1rem 0;
+  box-sizing: content-box;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 0.5rem;
+  }
+
+  .option-wrap {
+    display: flex;
+    align-items: center;
+    height: 1.5rem;
+    cursor: pointer !important;
+    user-select: none;
+    padding: 0.35rem 0 0.35rem 0.8rem;
+    margin: 0;
+    font-weight: 500;
+
+    &:hover {
+      color: lightblue;
+    }
+  }
+}
+
+.arrow-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1rem;
+  width: 1rem;
+  margin-right: 0.85rem;
+}
+.arrow {
+  height: 0.6rem;
+  width: 0.6rem;
+  border-right: 2px solid lightblue;
+  border-bottom: 2px solid lightblue;
+  transform: rotate(45deg);
+  transition: transform 0.2s linear;
+  transform-origin: 65% 65%;
+}
+.up {
+  transform: rotate(-135deg);
+}

@@ -4,13 +4,19 @@ import { getLocation } from "./getLocation";
 import "./styles.scss";
 import { locationData } from "./locationData";
 import Switch from "react-switch";
-import { getNewFormData } from "./getNewFormData";
+import Dropdown from "../Dropdown";
+import Checkbox from "../Checkbox";
+import { getCategoryName } from "./getCategoryName";
+import { getUserId } from "../../context/user";
+import { getEditData } from "./getEditData";
+import { updateLocationData } from "./updateLocationData";
 
 const EditLocation = () => {
   const [location, setLocation] = useState(null);
   const [formData, setFormData] = useState({});
   let { id } = useParams();
-  const [newFormData, setNewFormData] = useState(getNewFormData());
+  const [checkbox, setCheckbox] = useState(false);
+  const handleCheckboxChange = () => setCheckbox(!checkbox);
 
   useEffect(() => {
     getLocation(id, setLocation);
@@ -21,7 +27,8 @@ const EditLocation = () => {
       locationData(location, setFormData);
     }
   }, [location]);
-  const handleChange = () => {};
+
+  const handleAnswerChange = () => {};
 
   const renderQuestions = () => {
     if (formData && formData.questions && formData.questions.length > 0) {
@@ -29,7 +36,7 @@ const EditLocation = () => {
         for (const [key, value] of Object.entries(question)) {
           return (
             <h5 key={key}>
-              {key} <Switch onChange={handleChange} checked={value} />
+              {key} <Switch onChange={handleAnswerChange} checked={value} />
             </h5>
           );
         }
@@ -55,24 +62,76 @@ const EditLocation = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+
+    if (!checkbox) {
+      const addressParts = formData.street.split(" ");
+      const addressLen = addressParts.length;
+
+      const numIdx = addressParts.findIndex((part) => {
+        const firstChar = parseInt(part[0]);
+        return !isNaN(firstChar);
+      });
+
+      if (numIdx === addressLen - 1) {
+        const num = addressParts.pop();
+        addressParts.unshift(num);
+      }
+      const address = addressParts.join(" ");
+
+      const request = {
+        fields: ["geometry"],
+        query: `${address} ${formData.city}`,
+      };
+
+      const node = document.querySelector("#node");
+      const placesService = new window.google.maps.places.PlacesService(node);
+
+      placesService.findPlaceFromQuery(request, function (results, status) {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+          let lat;
+          let lng;
+          if (results && results.length) {
+            lat = results[0].geometry.location.lat();
+            lng = results[0].geometry.location.lng();
+          }
+          const editData = getEditData(
+            location.id,
+            formData,
+            lat,
+            lng,
+            getUserId(),
+            location.attributes.images
+          );
+          updateLocationData(editData);
+        } else {
+          console.log(false);
+        }
+      });
+    }
   };
 
   const handleEditChange = (e, target) => {
     e.persist();
-    setNewFormData((prevState) => ({
+    setFormData((prevState) => ({
       ...prevState,
-      data: {
-        ...prevState.data,
-        [target]: e.target.value,
-      },
+      ...prevState.data,
+      [target]: e.target.value,
     }));
   };
 
-  console.log(newFormData);
+  const handleDropdownSelect = (value) => {
+    setFormData((prev) => ({
+      ...prev,
+      ...prev.data,
+      category: value,
+    }));
+  };
+
+  console.log(formData);
   const renderForm = () => {
     return (
-      <form>
-        <div className="form-group">
+      <form onSubmit={handleFormSubmit}>
+        <div className="form-group" id="node">
           <label htmlFor="name">Name</label>
           <input
             type="text"
@@ -125,35 +184,39 @@ const EditLocation = () => {
             onChange={(e) => handleEditChange(e, "phone")}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="lat">Lat</label>
-          <input
-            type="number"
-            className="form-control"
-            id="lat"
-            step="any"
-            placeholder={formData.lat}
-            onChange={(e) => handleEditChange(e, "lat")}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="lng">Lng</label>
-          <input
-            type="number"
-            className="form-control"
-            id="lng"
-            step="any"
-            placeholder={formData.lng}
-            onChange={(e) => handleEditChange(e, "lng")}
-          />
-        </div>
+        <Checkbox isChecked={checkbox} handleClickCb={handleCheckboxChange} />
+        {checkbox && (
+          <>
+            <div className="form-group">
+              <label htmlFor="lat">Lat</label>
+              <input
+                type="number"
+                className="form-control"
+                id="lat"
+                step="any"
+                placeholder={formData.lat}
+                onChange={(e) => handleEditChange(e, "lat")}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="lng">Lng</label>
+              <input
+                type="number"
+                className="form-control"
+                id="lng"
+                step="any"
+                placeholder={formData.lng}
+                onChange={(e) => handleEditChange(e, "lng")}
+              />
+            </div>
+          </>
+        )}
         <div className="form-group">
           <label htmlFor="exampleFormControlSelect1">Example select</label>
           <Dropdown
             onSelect={handleDropdownSelect}
-            value={categoryId}
-            isValid={formData.validation[CATEGORY]}
-            heading="Select..."
+            value={location.relationships.category.data.id}
+            heading={getCategoryName(location.relationships.category.data.id)}
           />
         </div>
 
@@ -164,9 +227,8 @@ const EditLocation = () => {
             id="exampleFormControlTextarea1"
             rows="3"
             placeholder={formData.description}
-            onChange={(e) => handleEditChange(e, "description")}
+            onChange={(e) => handleEditChange(e, "about")}
           />
-          1
         </div>
         {renderQuestions()}
         {renderPhotos()}
@@ -175,6 +237,6 @@ const EditLocation = () => {
     );
   };
 
-  return <div>{location ? renderForm() : ""}</div>;
+  return <div>{location && renderForm()}</div>;
 };
 export default EditLocation;
