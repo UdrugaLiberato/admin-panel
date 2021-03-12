@@ -26,7 +26,7 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
 
     axios
@@ -92,7 +92,7 @@ const Login = () => {
                 <button
                   className="btn btn-primary"
                   type="button"
-                  onClick={handleSubmit}
+                  onClick={handleLogin}
                 >
                   Login
                 </button>
