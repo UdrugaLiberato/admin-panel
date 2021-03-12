@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FaHeart } from "react-icons/fa";
+import { UserContext } from "../../context/user";
+import { useHistory } from "react-router-dom";
 
 const Main = () => {
   return (

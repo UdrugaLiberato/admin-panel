@@ -9,13 +9,8 @@ export const UserContext = createContext({
 const id = Cookies.get("_id") || null;
 const accessToken = Cookies.get("_accessToken") || null;
 
-const getUserStatus = () => {
-  const status = Cookies.get("_status") || null;
-
-  return {
-    user: {},
-    status: !!status,
-  };
+export const getUserStatus = () => {
+  return Cookies.get("_status");
 };
 
 export const UserProvider = ({ children }) => {

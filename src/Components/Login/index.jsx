@@ -65,7 +65,7 @@ const Login = () => {
               <h4>Login</h4>
               <h6>Enter your Email and Password</h6>
             </div>
-            <form className="theme-form" onSubmit={handleSubmit}>
+            <form className="theme-form" onSubmit={handleLogin}>
               <div className="form-group">
                 <label className="col-form-label pt-0">Email</label>
                 <input

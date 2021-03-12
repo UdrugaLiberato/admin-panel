@@ -38,7 +38,6 @@ const ListLocations = () => {
 
   const renderLocations = () => {
     return locations.map((location) => {
-      console.log(location.attributes.deletedAt);
       return (
         <tbody key={location.id}>
           <tr className={`${location.attributes.deletedAt && "bg-danger"}`}>

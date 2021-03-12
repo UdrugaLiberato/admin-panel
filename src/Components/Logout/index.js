@@ -3,8 +3,7 @@ import Cookies from "js-cookie";
 import { useHistory } from "react-router-dom";
 
 const Logout = () => {
-  Cookies.remove("_accessToken");
-  Cookies.remove("_status");
+  Cookies.set("_status", false);
   const history = useHistory();
 
   history.push("/");
