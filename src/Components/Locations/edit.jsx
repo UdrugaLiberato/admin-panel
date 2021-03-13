@@ -9,7 +9,20 @@ import Checkbox from "../Checkbox";
 import { getCategoryName } from "./getCategoryName";
 import { getUserId } from "../../context/user";
 import { getEditData } from "./getEditData";
+import { getBase64FromUrl } from "../../helpers/getBase64FromUrl";
+import FilePondPluginFileEncode from "filepond-plugin-file-encode";
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import "filepond/dist/filepond.min.css";
+import { FilePond, registerPlugin } from "react-filepond";
 import { updateLocationData } from "./updateLocationData";
+
+registerPlugin(
+  FilePondPluginImageExifOrientation,
+  FilePondPluginImagePreview,
+  FilePondPluginFileEncode
+);
 
 const EditLocation = () => {
   const [location, setLocation] = useState(null);
@@ -17,14 +30,22 @@ const EditLocation = () => {
   let { id } = useParams();
   const [checkbox, setCheckbox] = useState(false);
   const handleCheckboxChange = () => setCheckbox(!checkbox);
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     getLocation(id, setLocation);
   }, []);
 
+  console.log(files.length);
+
   useEffect(() => {
     if (location !== null) {
       locationData(location, setFormData);
+      location.attributes.images.map((image) => {
+        getBase64FromUrl(`api.udruga-liberato.hr/images/${image}`)
+          .then((data) => setFiles((prev) => [...prev, data]))
+          .catch((err) => console.error(err));
+      });
     }
   }, [location]);
 
@@ -60,6 +81,27 @@ const EditLocation = () => {
     }
   };
 
+  const renderPhotoBlock = () => {
+    return (
+      <div className="App">
+        <FilePond
+          onaddfile={(err, item) => {
+            if (err) {
+              return;
+            }
+            // @ts-ignore
+            setFiles((file) => file.concat(item.getFileEncodeDataURL()));
+          }}
+          allowReorder={true}
+          allowMultiple={true}
+          labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+        />
+      </div>
+    );
+  };
+
+  if (location) {
+  }
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
@@ -100,17 +142,43 @@ const EditLocation = () => {
             lat,
             lng,
             getUserId(),
-            location.attributes.images
+            files
           );
           updateLocationData(editData);
         } else {
-          console.log(false);
+          const editData = getEditData(
+            location.id,
+            formData,
+            formData.lat,
+            formData.lng,
+            getUserId(),
+            files
+          );
+          updateLocationData(editData);
         }
       });
     }
   };
 
   const handleEditChange = (e, target) => {
+    if (target === "published") {
+      setFormData((prevState) => ({
+        ...prevState,
+        ...prevState.data,
+        published: !formData.published,
+      }));
+      return;
+    }
+
+    if (target === "featured") {
+      setFormData((prevState) => ({
+        ...prevState,
+        ...prevState.data,
+        featured: !formData.featured,
+      }));
+      return;
+    }
+
     e.persist();
     setFormData((prevState) => ({
       ...prevState,
@@ -127,7 +195,6 @@ const EditLocation = () => {
     }));
   };
 
-  console.log(formData);
   const renderForm = () => {
     return (
       <form onSubmit={handleFormSubmit}>
@@ -219,7 +286,14 @@ const EditLocation = () => {
             heading={getCategoryName(location.relationships.category.data.id)}
           />
         </div>
-
+        <Switch
+          checked={location.attributes.published}
+          onChange={(e) => handleEditChange(e, "published")}
+        />
+        <Switch
+          checked={location.attributes.featured}
+          onChange={(e) => handleEditChange(e, "featured")}
+        />
         <div className="form-group">
           <label htmlFor="exampleFormControlTextarea1">Description</label>
           <textarea
@@ -231,6 +305,7 @@ const EditLocation = () => {
           />
         </div>
         {renderQuestions()}
+        {renderPhotoBlock()}
         {renderPhotos()}
         <input type="submit" onClick={handleFormSubmit} value="Edit" />
       </form>

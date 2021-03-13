@@ -11,6 +11,8 @@ export const locationData = (location, setFormData) => {
     lng: location.attributes.lng,
     about: location.attributes.description,
     questions: location.attributes.questionsAndAnswers,
+    published: location.attributes.published,
+    featured: location.attributes.featured,
     images: location.attributes.images,
     category: location.relationships.category.data.id,
   });

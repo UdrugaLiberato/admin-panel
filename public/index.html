@@ -20,5 +20,17 @@
 <script async
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBq4XzQTYxcqFKahd60xifRHft215gbwCk&libraries=places&output=json&callback=initMap">
 </script>
+<script>
+  function initMap() {
+  } // now it IS a function and it is in global
 
+  (() => {
+    initMap = function() {
+      // your code like...
+      let map = new google.maps.Map(document.getElementById("map"), {/*your code*/ });
+      // and other stuff...
+    };
+  });
+
+</script>
 </html>

@@ -9,8 +9,11 @@ export const getEditData = (locationId, formData, lat, lng, userId, images) => {
         city: formData.city,
         phone: formData.phone,
         email: formData.email,
+        published: formData.published,
+        featured: formData.featured,
         lat,
         lng,
+        images,
         about: formData.about,
       },
       relationships: {
@@ -18,6 +21,12 @@ export const getEditData = (locationId, formData, lat, lng, userId, images) => {
           data: {
             type: "category",
             id: formData.category,
+          },
+        },
+        user: {
+          data: {
+            type: "user",
+            id: userId,
           },
         },
       },
