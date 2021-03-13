@@ -7,6 +7,7 @@ import EditLocation from "./Components/Locations/edit";
 import Logout from "./Components/Logout";
 import { getUserStatus } from "./context/user";
 import Navigation from "./Components/Navigation";
+import CreateLocation from "./Components/Locations/create";
 
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="/dashboard" exact component={DashboardPage} />
         <Route path="/locations" exact component={ListLocations} />
         <Route path="/locations/edit/:id" exact component={EditLocation} />
+        <Route path="/locations/new" exact component={CreateLocation} />
         <Route path="/logout" exact component={Logout} />
       </Switch>
     </div>

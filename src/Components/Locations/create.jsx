@@ -1,101 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getLocation } from "../../api/getLocation";
-import "./styles.scss";
-import { locationData } from "../../helpers/locationData";
+import React, { useState } from "react";
 import Switch from "react-switch";
-import Dropdown from "../Dropdown";
 import Checkbox from "../Checkbox";
-import { getCategoryName } from "../../helpers/getCategoryName";
-import { getUserId } from "../../context/user";
-import { prepareLocationData } from "../../helpers/prepareLocationData";
-import { getBase64FromUrl } from "../../helpers/getBase64FromUrl";
-import FilePondPluginFileEncode from "filepond-plugin-file-encode";
-import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import "filepond/dist/filepond.min.css";
-import { FilePond, registerPlugin } from "react-filepond";
-import { updateLocationData } from "../../api/updateLocationData";
+import Dropdown from "../Dropdown";
+import { blankLocationData } from "../../helpers/blankLocationData";
+import { FilePond } from "react-filepond";
+import { createLocationData } from "../../helpers/createLocationData";
 
-registerPlugin(
-  FilePondPluginImageExifOrientation,
-  FilePondPluginImagePreview,
-  FilePondPluginFileEncode
-);
-
-const EditLocation = () => {
-  const [location, setLocation] = useState(null);
-  const [formData, setFormData] = useState({});
-  let { id } = useParams();
+const CreateLocation = () => {
+  const [formData, setFormData] = useState(blankLocationData);
   const [checkbox, setCheckbox] = useState(false);
   const handleCheckboxChange = () => setCheckbox(!checkbox);
   const [files, setFiles] = useState([]);
-
-  useEffect(() => {
-    getLocation(id, setLocation);
-  }, [id]);
-
-  useEffect(() => {
-    if (location !== null) {
-      locationData(location, setFormData);
-      location.attributes.images.map((image) => {
-        return getBase64FromUrl(`api.udruga-liberato.hr/images/${image}`)
-          .then((data) => setFiles((prev) => [...prev, data]))
-          .catch((err) => console.error(err));
-      });
-    }
-  }, [location]);
-
-  const handleAnswerChange = () => {};
-
-  const renderQuestions = () => {
-    if (formData && formData.questions && formData.questions.length > 0) {
-      return formData.questions.map((question) => {
-        for (const [key, value] of Object.entries(question)) {
-          return (
-            <h5 key={key}>
-              {key} <Switch onChange={handleAnswerChange} checked={value} />
-            </h5>
-          );
-        }
-      });
-    } else {
-      return null;
-    }
-  };
-
-  const renderPhotos = () => {
-    if (formData && formData.images && formData.images.length > 0) {
-      return formData.images.map((image) => {
-        return (
-          <img
-            key={image}
-            src={`https://api.udruga-liberato.hr/images/${image}`}
-            alt={formData.name}
-          />
-        );
-      });
-    }
-  };
-
-  const renderPhotoBlock = () => {
-    return (
-      <div className="App">
-        <FilePond
-          onaddfile={(err, item) => {
-            if (err) {
-              return;
-            }
-            setFiles((file) => file.concat(item.getFileEncodeDataURL()));
-          }}
-          allowReorder={true}
-          allowMultiple={true}
-          labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
-        />
-      </div>
-    );
-  };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -131,25 +46,18 @@ const EditLocation = () => {
             lat = results[0].geometry.location.lat();
             lng = results[0].geometry.location.lng();
           }
-          const editData = prepareLocationData(
-            location.id,
-            formData,
-            lat,
-            lng,
-            getUserId(),
-            files
-          );
-          updateLocationData(editData);
+          const newLocationData = createLocationData(formData, lat, lng, files);
+          console.log(newLocationData);
+          // createNewLocation(newLocationData);
         } else {
-          const editData = prepareLocationData(
-            location.id,
+          const newLocationData = createLocationData(
             formData,
             formData.lat,
             formData.lng,
-            getUserId(),
             files
           );
-          updateLocationData(editData);
+          // createNewLocation(newLocationData);
+          console.log(newLocationData);
         }
       });
     }
@@ -159,7 +67,6 @@ const EditLocation = () => {
     if (target === "published") {
       setFormData((prevState) => ({
         ...prevState,
-        ...prevState.data,
         published: !formData.published,
       }));
       return;
@@ -168,7 +75,6 @@ const EditLocation = () => {
     if (target === "featured") {
       setFormData((prevState) => ({
         ...prevState,
-        ...prevState.data,
         featured: !formData.featured,
       }));
       return;
@@ -177,7 +83,6 @@ const EditLocation = () => {
     e.persist();
     setFormData((prevState) => ({
       ...prevState,
-      ...prevState.data,
       [target]: e.target.value,
     }));
   };
@@ -185,9 +90,26 @@ const EditLocation = () => {
   const handleDropdownSelect = (value) => {
     setFormData((prev) => ({
       ...prev,
-      ...prev.data,
       category: value,
     }));
+  };
+
+  const renderPhotoBlock = () => {
+    return (
+      <div className="App">
+        <FilePond
+          onaddfile={(err, item) => {
+            if (err) {
+              return;
+            }
+            setFiles((file) => file.concat(item.getFileEncodeDataURL()));
+          }}
+          allowReorder={true}
+          allowMultiple={true}
+          labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+        />
+      </div>
+    );
   };
 
   const renderForm = () => {
@@ -277,16 +199,16 @@ const EditLocation = () => {
           <label htmlFor="exampleFormControlSelect1">Example select</label>
           <Dropdown
             onSelect={handleDropdownSelect}
-            value={location.relationships.category.data.id}
-            heading={getCategoryName(location.relationships.category.data.id)}
+            value={"1"}
+            heading="Select..."
           />
         </div>
         <Switch
-          checked={location.attributes.published}
+          checked={formData.published}
           onChange={(e) => handleEditChange(e, "published")}
         />
         <Switch
-          checked={location.attributes.featured}
+          checked={formData.featured}
           onChange={(e) => handleEditChange(e, "featured")}
         />
         <div className="form-group">
@@ -299,14 +221,15 @@ const EditLocation = () => {
             onChange={(e) => handleEditChange(e, "about")}
           />
         </div>
-        {renderQuestions()}
+        {/*{renderQuestions()}*/}
         {renderPhotoBlock()}
-        {renderPhotos()}
-        <input type="submit" onClick={handleFormSubmit} value="Edit" />
+
+        <input type="submit" onClick={handleFormSubmit} value="Create" />
       </form>
     );
   };
 
-  return <div>{location && renderForm()}</div>;
+  return <div>{renderForm()}</div>;
 };
-export default EditLocation;
+
+export default CreateLocation;

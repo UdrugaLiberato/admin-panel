@@ -81,7 +81,13 @@ const ListLocations = () => {
   };
   return (
     <div className="list-locations">
-      <table className="table">
+      <h2 className="mt-3 text-center">Locations in Liberato maps</h2>
+      <Link to="locations/new">
+        <button className="my-5 ml-5 btn btn-lg text-white btn-primary btn-pills float-lg-left">
+          ADD NEW
+        </button>
+      </Link>
+      <table className="table w-75">
         <thead>
           <tr>
             <th scope="col">Name</th>

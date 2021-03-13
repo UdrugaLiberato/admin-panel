@@ -1,16 +1,21 @@
 .list-locations {
   overflow-x: hidden;
+  display: flex;
   width: 100%;
+  flex-direction: column;
+
+  > button {
+    width: 10%;
+  }
+
+  table {
+    width: 80%;
+    margin: 0 auto;
+  }
 }
 
 .edit-page {
   display: flex;
   flex-direction: column;
-  width: 100%;
   overflow-x: hidden;
-  
-  h1 {
-    text-align: center;
-    padding: 2rem 0;
-  }
 }
