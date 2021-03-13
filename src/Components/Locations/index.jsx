@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { getAllLocations } from "./getAllLocations";
+import { getAllLocations } from "../../api/getAllLocations";
 import "./styles.scss";
 import { FaCheck, FaWindowClose } from "react-icons/all";
-import { getCategoryName } from "./getCategoryName";
+import { getCategoryName } from "../../helpers/getCategoryName";
 import axios from "axios";
 import { Link } from "react-router-dom";
 

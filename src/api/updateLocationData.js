@@ -1,5 +1,5 @@
 import axios from "axios";
-import { headers } from "../../constants";
+import { headers } from "../constants";
 
 export const updateLocationData = (data) => {
   axios

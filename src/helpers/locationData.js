@@ -1,5 +1,3 @@
-import { getCategoryName } from "./getCategoryName";
-
 export const locationData = (location, setFormData) => {
   setFormData({
     name: location.attributes.name,

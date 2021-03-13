@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getLocation } from "./getLocation";
+import { getLocation } from "../../api/getLocation";
 import "./styles.scss";
-import { locationData } from "./locationData";
+import { locationData } from "../../helpers/locationData";
 import Switch from "react-switch";
 import Dropdown from "../Dropdown";
 import Checkbox from "../Checkbox";
-import { getCategoryName } from "./getCategoryName";
+import { getCategoryName } from "../../helpers/getCategoryName";
 import { getUserId } from "../../context/user";
-import { getEditData } from "./getEditData";
+import { prepareLocationData } from "../../helpers/prepareLocationData";
 import { getBase64FromUrl } from "../../helpers/getBase64FromUrl";
 import FilePondPluginFileEncode from "filepond-plugin-file-encode";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
@@ -16,7 +16,7 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import "filepond/dist/filepond.min.css";
 import { FilePond, registerPlugin } from "react-filepond";
-import { updateLocationData } from "./updateLocationData";
+import { updateLocationData } from "../../api/updateLocationData";
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -34,15 +34,13 @@ const EditLocation = () => {
 
   useEffect(() => {
     getLocation(id, setLocation);
-  }, []);
-
-  console.log(files.length);
+  }, [id]);
 
   useEffect(() => {
     if (location !== null) {
       locationData(location, setFormData);
       location.attributes.images.map((image) => {
-        getBase64FromUrl(`api.udruga-liberato.hr/images/${image}`)
+        return getBase64FromUrl(`api.udruga-liberato.hr/images/${image}`)
           .then((data) => setFiles((prev) => [...prev, data]))
           .catch((err) => console.error(err));
       });
@@ -89,7 +87,6 @@ const EditLocation = () => {
             if (err) {
               return;
             }
-            // @ts-ignore
             setFiles((file) => file.concat(item.getFileEncodeDataURL()));
           }}
           allowReorder={true}
@@ -136,7 +133,7 @@ const EditLocation = () => {
             lat = results[0].geometry.location.lat();
             lng = results[0].geometry.location.lng();
           }
-          const editData = getEditData(
+          const editData = prepareLocationData(
             location.id,
             formData,
             lat,
@@ -146,7 +143,7 @@ const EditLocation = () => {
           );
           updateLocationData(editData);
         } else {
-          const editData = getEditData(
+          const editData = prepareLocationData(
             location.id,
             formData,
             formData.lat,

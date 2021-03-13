@@ -1,4 +1,11 @@
-export const getEditData = (locationId, formData, lat, lng, userId, images) => {
+export const prepareLocationData = (
+  locationId,
+  formData,
+  lat,
+  lng,
+  userId,
+  images
+) => {
   return {
     data: {
       type: "location",
