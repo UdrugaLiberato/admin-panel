@@ -5,6 +5,7 @@ import Dropdown from "../Dropdown";
 import { blankLocationData } from "../../helpers/blankLocationData";
 import { FilePond } from "react-filepond";
 import { createLocationData } from "../../helpers/createLocationData";
+import { createNewLocation } from "../../api/createNewLocation";
 
 const CreateLocation = () => {
   const [formData, setFormData] = useState(blankLocationData);
@@ -49,17 +50,16 @@ const CreateLocation = () => {
           const newLocationData = createLocationData(formData, lat, lng, files);
           console.log(newLocationData);
           // createNewLocation(newLocationData);
-        } else {
-          const newLocationData = createLocationData(
-            formData,
-            formData.lat,
-            formData.lng,
-            files
-          );
-          // createNewLocation(newLocationData);
-          console.log(newLocationData);
         }
       });
+    } else {
+      const newLocationData = createLocationData(
+        formData,
+        formData.lat,
+        formData.lng,
+        files
+      );
+      createNewLocation(newLocationData);
     }
   };
 

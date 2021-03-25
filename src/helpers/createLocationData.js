@@ -10,10 +10,11 @@ export const createLocationData = (formData, lat, lng, images) => {
         city: formData.city,
         phone: formData.phone,
         email: formData.email,
-        lat: lat,
-        lng: lng,
+        lat: +lat,
+        lng: +lng,
         about: formData.about,
         images,
+        questionsAndAnswers: [],
       },
       relationships: {
         category: {

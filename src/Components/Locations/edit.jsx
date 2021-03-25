@@ -140,18 +140,18 @@ const EditLocation = () => {
             files
           );
           updateLocationData(editData);
-        } else {
-          const editData = prepareLocationData(
-            location.id,
-            formData,
-            formData.lat,
-            formData.lng,
-            getUserId(),
-            files
-          );
-          updateLocationData(editData);
         }
       });
+    } else {
+      const editData = prepareLocationData(
+        location.id,
+        formData,
+        formData.lat,
+        formData.lng,
+        getUserId(),
+        files
+      );
+      updateLocationData(editData);
     }
   };
 
