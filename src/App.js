@@ -8,6 +8,7 @@ import Logout from "./Components/Logout";
 import { getUserStatus } from "./context/user";
 import Navigation from "./Components/Navigation";
 import CreateLocation from "./Components/Locations/create";
+import AddPost from "./Components/Blog/AddPost";
 
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -44,6 +45,7 @@ const App = () => {
         <Route path="/locations" exact component={ListLocations} />
         <Route path="/locations/edit/:id" exact component={EditLocation} />
         <Route path="/locations/new" exact component={CreateLocation} />
+        <Route path="/blog/new" exact component={AddPost} />
         <Route path="/logout" exact component={Logout} />
       </Switch>
     </div>
